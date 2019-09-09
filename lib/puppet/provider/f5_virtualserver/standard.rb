@@ -42,6 +42,9 @@ Puppet::Type.type(:f5_virtualserver).provide(:standard, parent: Puppet::Provider
 
     virtualservers.each do |vserver|
       destination_address, destination_port = address_and_port(vserver['destination'])
+      if vserver['trafficMatchingCriteria']
+        Puppet.notice("VS uses traffic matching... expect no destination_address: '#{destination_address}' but port '#{destination_port}'" )
+      end
 
       if vserver["vlansEnabled"]
         vlan_and_tunnel_traffic = { "enabled" => vserver["vlans"], }
