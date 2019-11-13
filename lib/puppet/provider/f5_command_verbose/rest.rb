@@ -15,7 +15,7 @@ Puppet::Type.type(:f5_command_verbose).provide(:rest, parent: Puppet::Provider::
    command = message[:tmsh]
    command ="-c " + "\"" + command +"\""
    message = {"command"=> "run", "utilCmdArgs"=> command }
-
+ 
   message.to_json
   end
 
@@ -30,7 +30,7 @@ Puppet::Type.type(:f5_command_verbose).provide(:rest, parent: Puppet::Provider::
     m = resource.to_hash
     Puppet.notice "TMSH: description " + m[:description] if m[:description]
     rb = JSON.parse(result.body)
-    Puppet.warn "TMSH commandResult " + rb['commandResult'].chomp if rb['commandResult']
+    Puppet.warning "TMSH commandResult " + rb['commandResult'].chomp if rb['commandResult']
     return result
   end
 
