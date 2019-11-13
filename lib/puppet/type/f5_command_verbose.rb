@@ -8,7 +8,7 @@ require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/prop
 require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_ratio.rb'))
 require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_state.rb'))
 
-Puppet::Type.newtype(:f5_command) do
+Puppet::Type.newtype(:f5_command_verbose) do
   @doc = 'Run tmsh command'
 
   apply_to_device
