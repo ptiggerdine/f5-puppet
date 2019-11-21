@@ -226,9 +226,7 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
   # destination may contain an IPV4 or IPV6 address
 
   def self.address_and_port(destination)
-    if destination.split('/').count < 2
-      raise ArgumentError, "Unexpected format for destination address and port, got '#{destination}'"
-    end
+    # destination maybe ':0' only in case of trafficMatchingCriteria
     address_and_port = destination.split('/')[-1]
     if (matched = address_and_port.match(/(?<address>.*?)\:(?<port>\d+)$/))
       # IPV4
@@ -241,6 +239,11 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
     else
       raise ArgumentError, "Unexpected format for destination address and port, got '#{destination}'"
     end
+    if destination.split(':').count < 2
+      address = nil
+      Puppet.notice("address_and_port returning address nil cause simple destination: '#{destination}'")
+    end
+
     port = '*' if port.to_i.zero?
     [address, port]
   end
