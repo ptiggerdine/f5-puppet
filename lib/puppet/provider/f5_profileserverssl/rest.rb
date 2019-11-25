@@ -84,7 +84,7 @@ Puppet::Type.type(:f5_profileserverssl).provide(:rest, parent: Puppet::Provider:
       result = Puppet::Provider::F5.put("/mgmt/tm/ltm/profile/server-ssl/#{full_path_uri}", message(resource))
     end
     return result
-  enddefaults
+  end
 
   def exists?
     @property_hash[:ensure] == :present
