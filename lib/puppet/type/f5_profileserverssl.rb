@@ -23,6 +23,13 @@ Puppet::Type.newtype(:f5_profileserverssl) do
 
   end
 
+  newproperty(:defaults_from) do
+    desc "Specifies the serverssl profile that you want to use as the parent profile. Your new profile inherits all settings and values from the parent profile specified."
+    validate do |value|
+      fail ArgumentError, "Values must take the form /Partition/name; #{value} does not" unless value =~ /^\/[\w\.-]+\/[\w|\.-]+$/
+    end
+  end
+
   newproperty(:description, :parent => Puppet::Property::F5Description)
 
 # newproperty(:cert, :required_features => :cert,  :parent => Puppet::Property::F5Profile) do

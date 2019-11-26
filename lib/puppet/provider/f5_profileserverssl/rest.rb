@@ -15,6 +15,7 @@ Puppet::Type.type(:f5_profileserverssl).provide(:rest, parent: Puppet::Provider:
         ensure:                          :present,
         name:                            profile['fullPath'],
         description:                     profile['description'],
+        defaults_from: 			             profile['defaultsFrom'],
         cert:                            profile['cert'],
         key:                             profile['key'],
         proxy_ssl:                       profile['proxySsl'],
@@ -27,7 +28,7 @@ Puppet::Type.type(:f5_profileserverssl).provide(:rest, parent: Puppet::Provider:
         authenticate:                    profile['authenticate'],
         retain_certificate:              profile['retainCertificate'],
         authenticate_depth:              profile['authenticateDepth'],
-      )
+          )
     end
 
     instances
@@ -42,11 +43,11 @@ Puppet::Type.type(:f5_profileserverssl).provide(:rest, parent: Puppet::Provider:
     end
   end
 
-  def create_message(basename, hash)
+  def create_message(basename, partition, hash)
     # Create the message by stripping :present.
     new_hash            = hash.reject { |k, _| [:ensure, :provider, Puppet::Type.metaparams].flatten.include?(k) }
     new_hash[:name]     = basename
-
+    new_hash[:partition]     = partition
     return new_hash
   end
 
@@ -56,7 +57,7 @@ Puppet::Type.type(:f5_profileserverssl).provide(:rest, parent: Puppet::Provider:
     # in the form of a hash.
     message = object.to_hash
 
-    # Map for conversion in the message.
+    # Map for conversion in the message. Include defaultsFrom
     map = {
       :'proxy-ssl'                        => :proxySsl,
       :'proxy-ssl-passthrough'            => :proxySslPassthrough,
@@ -65,11 +66,12 @@ Puppet::Type.type(:f5_profileserverssl).provide(:rest, parent: Puppet::Provider:
       :'untrusted-cert-response-control'  => :untrustedCertResponseControl,
       :'retain_certificate'               => :retainCertificate,
       :'authenticate-depth'               => :authenticateDepth,
+      :'defaults-from'                    => :defaultsFrom,
     }
 
     message = strip_nil_values(message)
     message = convert_underscores(message)
-    message = create_message(basename, message)
+    message = create_message(basename, partition, message)
     message = rename_keys(map, message)
     message = string_to_integer(message)
 
@@ -100,7 +102,7 @@ Puppet::Type.type(:f5_profileserverssl).provide(:rest, parent: Puppet::Provider:
     full_path_uri = resource[:name].gsub('/','~')
     result = Puppet::Provider::F5.delete("/mgmt/tm/ltm/profile/server-ssl/#{full_path_uri}")
     @property_hash.clear
-
+    
     return result
   end
 
