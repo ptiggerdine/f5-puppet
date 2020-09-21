@@ -76,4 +76,20 @@ Puppet::Type.newtype(:f5_profileclientssl) do
     desc "partition to install profile to."
   end
 
+  newproperty(:parent_profile) do
+    desc "Specifies the profile that you want to use as the parent profile."
+  end
+
+  newproperty(:ssl_options) do
+    desc "Enables SSL options, including dont-insert-empty-fragments, no-ssl, no-tlsv1.3, no-tlsv1.2, no-tlsv1.1, no-tlsv1."
+  end
+
+  newproperty(:ciphers) do
+    desc "Ciphers to enable. Default is none."
+  end
+
+  newproperty(:cipher_group) do
+    desc "Group of ciphers to enable. Default is DEFAULT."
+  end
+
 end

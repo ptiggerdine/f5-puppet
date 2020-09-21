@@ -27,6 +27,10 @@ Puppet::Type.type(:f5_profileclientssl).provide(:rest, parent: Puppet::Provider:
         retain_certificate:          profile['retainCertificate'],
         authenticate_depth:          profile['authenticateDepth'],
         partition:                   profile['partition'],
+        parent_profile:              profile['defaultsFrom'],
+        cipher_group:                profile['cipherGroup'],
+        ciphers:                     profile['ciphers'],
+        ssl_options:                 profile['tmOptions'],
       )
     end
 
@@ -70,6 +74,9 @@ Puppet::Type.type(:f5_profileclientssl).provide(:rest, parent: Puppet::Provider:
       :'untrusted-cert-response-control'          => :untrustedCertResponseControl,
       :'retain_certificate'          => :retainCertificate,
       :'authenticate-depth'          => :authenticateDepth,
+      :'parent-profile'              => :defaultsFrom,
+      :'cipher-group'                => :cipherGroup,
+      :'ssl-options'                 => :tmOptions,
     }
     full_path_uri = resource[:name].gsub('/','~')
     message = strip_nil_values(message)
