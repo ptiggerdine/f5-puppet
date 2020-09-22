@@ -20,6 +20,13 @@ Puppet::Type.newtype(:f5_profileclientssl) do
 
   newproperty(:description, :parent => Puppet::Property::F5Description)
 
+  newproperty(:defaults_from) do
+    desc "Specifies the profile that you want to use as the parent profile. Your new profile inherits all settings and values from the parent profile specified."
+    validate do |value|
+      fail ArgumentError, "Values must take the form /Partition/name; #{value} does not" unless value =~ /^\/[\w\.-]+\/[\w|\.-]+$/
+    end
+  end
+
   newproperty(:cert) do
     desc "cert"
   end
@@ -74,10 +81,6 @@ Puppet::Type.newtype(:f5_profileclientssl) do
 
   newproperty(:partition) do
     desc "partition to install profile to."
-  end
-
-  newproperty(:parent_profile) do
-    desc "Specifies the profile that you want to use as the parent profile."
   end
 
   newproperty(:ssl_options) do
