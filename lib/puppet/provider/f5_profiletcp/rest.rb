@@ -15,7 +15,7 @@ Puppet::Type.type(:f5_profiletcp).provide(:rest, parent: Puppet::Provider::F5) d
           ensure: :present,
           name: profile['fullPath'],
           description: profile['description'],
-          closewait-timeout: profile['closeWaitTimeout'],
+          close-wait-timeout: profile['closeWaitTimeout'],
           fin-wait-timeout: profile['finWaitTimeout'],
           defaults-from: profile['defaultsFrom'],
           fin-wait2-timeout: profile['finWait-2Timeout'],
