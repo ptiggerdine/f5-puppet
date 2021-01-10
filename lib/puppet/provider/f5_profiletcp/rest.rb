@@ -5,7 +5,7 @@ Puppet::Type.type(:f5_profiletcp).provide(:rest, parent: Puppet::Provider::F5) d
 
   def self.instances
     instances = []
-    profiles = Puppet::Provider::F5.call-items('/mgmt/tm/ltm/profile/tcp')
+    profiles = Puppet::Provider::F5.call_items('/mgmt/tm/ltm/profile/tcp')
     return [] if profiles.nil?
 
     profiles.each do |profile|
