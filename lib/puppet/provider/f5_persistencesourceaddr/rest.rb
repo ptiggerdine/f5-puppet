@@ -15,6 +15,7 @@ Puppet::Type.type(:f5_persistencesourceaddr).provide(:rest, parent: Puppet::Prov
         ensure:                    :present,
         name:                      address['fullPath'],
         description:               address['description'],
+        defaults_from:             address['defaultsFrom'],
         match_across_pools:        address['matchAcrossPools'],
         match_across_services:     address['matchAcrossServices'],
         match_across_virtuals:     address['matchAcrossVirtuals'],
@@ -58,6 +59,7 @@ Puppet::Type.type(:f5_persistencesourceaddr).provide(:rest, parent: Puppet::Prov
       :'match-across-virtuals'       => :matchAcrossVirtuals,
       :'hash-algorithm'              => :hashAlgorithm,
       :'override-connection-limit'   => :overrideConnectionLimit,
+      :'defaults-from'               => :defaultsFrom,
     }
 
     message = strip_nil_values(message)
