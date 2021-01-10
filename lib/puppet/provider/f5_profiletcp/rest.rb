@@ -9,23 +9,23 @@ Puppet::Type.type(:f5_profiletcp).provide(:rest, parent: Puppet::Provider::F5) d
     return [] if profiles.nil?
 
     profiles.each do |profile|
-      full-path-uri = profile['fullPath'].gsub('/','~')
+      full_path_uri = profile['fullPath'].gsub('/','~')
 
       instances << new(
-          ensure: :present,
-          name: profile['fullPath'],
-          description: profile['description'],
-          close-wait-timeout: profile['closeWaitTimeout'],
-          fin-wait-timeout: profile['finWaitTimeout'],
-          defaults-from: profile['defaultsFrom'],
-          fin-wait2-timeout: profile['finWait-2Timeout'],
-          idle-timeout: profile['idleTimeout'],
-          keep-alive-interval: profile['keepAliveInterval'],
-          minimum-rto: profile['minimumRto'],
-          reset-on-timeout: profile['resetOnTimeout'],
-          time-wait-timeout: profile['timeWaitTimeout'],
-          time-wait-recycle: profile['timeWaitRecycle'],
-          zero-windows-timeout: profile['zeroWindowTimeout'],
+        ensure:               :present,
+        name:                 profile['fullPath'],
+        description:          profile['description'],
+        close_wait_timeout:   profile['closeWaitTimeout'],
+        fin_wait_timeout:     profile['finWaitTimeout'],
+        defaults_from:        profile['defaultsFrom'],
+        fin_wait2_timeout:    profile['finWait-2Timeout'],
+        idle_timeout:         profile['idleTimeout'],
+        keep_alive_interval:  profile['keepAliveInterval'],
+        minimum_rto:          profile['minimumRto'],
+        reset_on_timeout:     profile['resetOnTimeout'],
+        time_wait_timeout:    profile['timeWaitTimeout'],
+        time_wait_recycle:    profile['timeWaitRecycle'],
+        zero_windows_timeout: profile['zeroWindowTimeout'],
       )
     end
 
@@ -41,20 +41,20 @@ Puppet::Type.type(:f5_profiletcp).provide(:rest, parent: Puppet::Provider::F5) d
     end
   end
 
-  def create-message(basename, partition, hash)
+  def create_message(basename, partition, hash)
     # Create the message by stripping :present.
-    new-hash = hash.reject {|k, -| [:ensure, :provider, Puppet::Type.metaparams].flatten.include?(k)}
-    new-hash[:name] = basename
-    new-hash[:partition] = partition
+    new_hash = hash.reject {|k, _| [:ensure, :provider, Puppet::Type.metaparams].flatten.include?(k)}
+    new_hash[:name] = basename
+    new_hash[:partition] = partition
 
-    return new-hash
+    return new_hash
   end
 
 
   def message(object)
     # Allows us to pass in resources and get all the attributes out
     # in the form of a hash.
-    message = object.to-hash
+    message = object.to_hash
 
     # Map for conversion in the message.
     map = {
@@ -71,57 +71,43 @@ Puppet::Type.type(:f5_profiletcp).provide(:rest, parent: Puppet::Provider::F5) d
         :'zero-windows-timeout' => :zeroWindowTimeout,
     }
 
-    message = strip-nil-values(message)
-    # message = convert-hsts(message)
-    message = convert-underscores(message)
-    message = create-message(basename, partition, message)
-    message = rename-keys(map, message)
-    message = string-to-integer(message)
+    message = strip_nil_values(message)
+    message = convert_underscores(message)
+    message = create_message(basename, partition, message)
+    message = rename_keys(map, message)
+    message = string_to_integer(message)
 
-    message.to-json
+    message.to_json
   end
 
-  # def convert-hsts(hash)
-  #   hash[:hsts] =
-  #       rename-keys(
-  #           {
-  #               :hsts-maximum-age => 'maximum-age',
-  #               :hsts-include-subdomains => 'include-subdomains',
-  #               :hsts-mode => 'mode',
-  #               :hsts-preload => 'preload',
-  #           },
-  #           strip-nil-values(hash.select {|key, value| key.to-s.start-with?('hsts-')}))
-  #   hash.reject {|key, value| key.to-s.start-with?('hsts-')}
-  # end
-
   def flush
-    if @property-hash != {}
-      full-path-uri = resource[:name].gsub('/','~')
-      result = Puppet::Provider::F5.patch("/mgmt/tm/ltm/profile/tcp/#{full-path-uri}", message(resource))
+    if @property_hash != {}
+      full_path_uri = resource[:name].gsub('/','~')
+      result = Puppet::Provider::F5.patch("/mgmt/tm/ltm/profile/tcp/#{full_path_uri}", message(resource))
     end
     return result
   end
 
   def exists?
-    @property-hash[:ensure] == :present
+    @property_hash[:ensure] == :present
   end
 
   def create
     result = Puppet::Provider::F5.post("/mgmt/tm/ltm/profile/tcp", message(resource))
     # We clear the hash here to stop flush from triggering.
-    @property-hash.clear
+    @property_hash.clear
 
     return result
   end
 
   def destroy
-    full-path-uri = resource[:name].gsub('/','~')
-    result = Puppet::Provider::F5.delete("/mgmt/tm/ltm/profile/tcp/#{full-path-uri}")
-    @property-hash.clear
+    full_path_uri = resource[:name].gsub('/','~')
+    result = Puppet::Provider::F5.delete("/mgmt/tm/ltm/profile/tcp/#{full_path_uri}")
+    @property_hash.clear
 
     return result
   end
 
-  mk-resource-methods
+  mk_resource_methods
 
 end
