@@ -5,7 +5,6 @@ describe 'f5_persistencesourceaddr' do
     pp=<<-EOS
     f5_persistencesourceaddr { '/Common/source_addr1':
       ensure                     => 'present',
-      defaults_from              => '/Common/source_addr',
       match_across_pools         => 'enabled',
       match_across_services      => 'enabled',
       match_across_virtuals      => 'enabled',
@@ -32,14 +31,14 @@ describe 'f5_persistencesourceaddr' do
     EOS
     make_site_pp(pp2)
     run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(:allow_changes => false)    
   end
 
   it 'deletes f5_persistencesourceaddr' do
     pp=<<-EOS
     f5_persistencesourceaddr { '/Common/source_addr1':
       ensure => 'absent',
-    }
+    }    
     EOS
     make_site_pp(pp)
     run_device(:allow_changes => true)
@@ -47,3 +46,4 @@ describe 'f5_persistencesourceaddr' do
 
   end
 end
+
