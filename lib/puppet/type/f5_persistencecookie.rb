@@ -30,6 +30,13 @@ Puppet::Type.newtype(:f5_persistencecookie) do
     desc "cookie_name."
   end
 
+  newproperty(:defaults_from) do
+    desc "Specifies the profile that you want to use as the parent profile. Your new profile inherits all settings and values from the parent profile specified."
+    validate do |value|
+      fail ArgumentError, "Values must take the form /Partition/name; #{value} does not" unless value =~ /^\/[\w\.-]+\/[\w|\.-]+$/
+    end
+  end
+
   newproperty(:httponly, :parent => Puppet::Property::F5truthy) do
     truthy_property("Valid values are 'enabled' or 'disabled'.")
   end

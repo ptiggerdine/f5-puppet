@@ -17,6 +17,7 @@ Puppet::Type.type(:f5_persistencecookie).provide(:rest, parent: Puppet::Provider
       description:              cookie['description'],
       method:                   cookie['method'],
       cookie_name:              cookie['cookieName'],
+      defaults_from:            cookie['defaultsFrom'],
       httponly:                 cookie['httponly'],
       secure:                   cookie['secure'],
       always_send:              cookie['alwaysSend'],
@@ -58,6 +59,7 @@ Puppet::Type.type(:f5_persistencecookie).provide(:rest, parent: Puppet::Provider
       :'always-send'          => :alwaysSend,
       :'cookie-encryption'    => :cookieEncryption,
       :'cookie-name'          => :cookieName,
+      :'defaults-from'        => :defaultsFrom,
     }
 
     message = strip_nil_values(message)
