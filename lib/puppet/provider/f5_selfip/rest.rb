@@ -21,6 +21,7 @@ Puppet::Type.type(:f5_selfip).provide(:rest, parent: Puppet::Provider::F5) do
         name:                   selfip['fullPath'],
         vlan:                   selfip['vlan'],
         inherit_traffic_group:  selfip['inheritedTrafficGroup'],
+        address:                selfip['address'],
         traffic_group:          selfip['trafficGroup'],
         address:                selfip['address'],
         port_lockdown:          Array(portlockdown),
