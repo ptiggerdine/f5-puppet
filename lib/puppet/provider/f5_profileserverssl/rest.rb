@@ -64,7 +64,7 @@ Puppet::Type.type(:f5_profileserverssl).provide(:rest, parent: Puppet::Provider:
       :'peer-cert-mode'                   => :peerCertMode,
       :'expire-cert-response_control'     => :expireCertResponseControl,
       :'untrusted-cert-response-control'  => :untrustedCertResponseControl,
-      :'retain_certificate'               => :retainCertificate,
+      :'retain-certificate'               => :retainCertificate,
       :'authenticate-depth'               => :authenticateDepth,
       :'defaults-from'                    => :defaultsFrom,
     }
@@ -102,7 +102,7 @@ Puppet::Type.type(:f5_profileserverssl).provide(:rest, parent: Puppet::Provider:
     full_path_uri = resource[:name].gsub('/','~')
     result = Puppet::Provider::F5.delete("/mgmt/tm/ltm/profile/server-ssl/#{full_path_uri}")
     @property_hash.clear
-    
+
     return result
   end
 
