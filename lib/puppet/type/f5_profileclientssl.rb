@@ -1,12 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/parameter/f5_name.rb'))
 require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_address.rb'))
-#require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_availability_requirement.rb'))
-#require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_connection_limit.rb'))
-#require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_connection_rate_limit.rb'))
 require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_description.rb'))
-#require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_health_monitors.rb'))
-#require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_ratio.rb'))
-#require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_state.rb'))
 require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_truthy.rb'))
 
 Puppet::Type.newtype(:f5_profileclientssl) do
@@ -94,4 +88,13 @@ Puppet::Type.newtype(:f5_profileclientssl) do
     desc "Group of ciphers to enable. Default is DEFAULT."
   end
 
+  newproperty(:sni_default, :parent => Puppet::Property::F5truthy) do
+    desc "When true, this profile is the default SSL profile when a client connection does not specify a known server name, or does not specify any server name at all. The default value is false. Valid values are 'enabled' or 'disabled'."
+    truthy_property("Valid values are 'enabled' or 'disabled'.")
+  end
+
+  newproperty(:sni_require, :parent => Puppet::Property::F5truthy) do
+    desc "When true, SNI support is required for the peer and if a client connection does not specify a known server name, or does not specify any server name at all, the handshake will fail. The default value is false. Valid values are 'enabled' or 'disabled'."
+    truthy_property("Valid values are 'enabled' or 'disabled'.")
+  end
 end

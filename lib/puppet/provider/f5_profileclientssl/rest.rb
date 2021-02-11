@@ -31,6 +31,8 @@ Puppet::Type.type(:f5_profileclientssl).provide(:rest, parent: Puppet::Provider:
         cipher_group:                profile['cipherGroup'],
         ciphers:                     profile['ciphers'],
         ssl_options:                 profile['tmOptions'],
+        sni_default:                 profile['sniDefault'],
+        sni_require:                 profile['sniRequire'],
       )
     end
 
@@ -77,6 +79,8 @@ Puppet::Type.type(:f5_profileclientssl).provide(:rest, parent: Puppet::Provider:
       :'defaults-from'              => :defaultsFrom,
       :'cipher-group'                => :cipherGroup,
       :'ssl-options'                 => :tmOptions,
+      :'sni-default'                => :sniDefault,
+      :'sni-require'                => :sniRequire,
     }
     full_path_uri = resource[:name].gsub('/','~')
     message = strip_nil_values(message)
