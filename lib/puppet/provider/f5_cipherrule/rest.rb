@@ -14,12 +14,14 @@ Puppet::Type.type(:f5_cipherrule).provide(:rest, parent: Puppet::Provider::F5) d
     return [] if cipherrules.nil?
 
     cipherrules.each do |cipherrule|
+      full_path_uri = profile['fullPath'].gsub('/','~')
+
       instances << new(
         name:                  cipherrule['fullPath'],
         ensure:                :present,
         cipher:                cipherrule['cipher'],
         description:           cipherrule['description'],
-        parition:              cipherrule['tmPartition'] || 'Common',
+        partition:              cipherrule['tmPartition'] || 'Common',
         dh_groups:             cipherrule['dhGroups'],
         signature_algorithms:  cipherrule['signatureAlgorithms'],
       )
@@ -36,6 +38,20 @@ Puppet::Type.type(:f5_cipherrule).provide(:rest, parent: Puppet::Provider::F5) d
     end
   end
 
+  def create_message(basename, partition, hash, chain)
+    # Create the message by stripping :present.
+    new_hash             = hash.reject { |k, _| [:ensure, :provider, Puppet::Type.metaparams].flatten.include?(k) }
+    new_hash[:name]      = basename
+    if "#{partition}" != 'absent'
+      new_hash[:partition] = partition
+    else
+      calculated_partition = resource[:name].split('/')[1]
+      Puppet.notice("ignore bug 'absent' value of partition, use #{resource[:name]} and calculated #{calculated_partition}")
+      new_hash[:partition] = calculated_partition
+    end
+    return new_hash
+  end
+
   def message(object)
     # Allows us to pass in resources and get all the attributes out
     # in the form of a hash.
@@ -43,14 +59,15 @@ Puppet::Type.type(:f5_cipherrule).provide(:rest, parent: Puppet::Provider::F5) d
 
     # Map for conversion in the message.
     map = {
-      :parition               => :tmParition,
+      :partition               => :tmPartition,
       :'dh-groups'            => :dhGroups,
       :'signature-algorithms' => :signatureAlgorithms,
     }
 
+    message = strip_nil_values(message)
     message = convert_underscores(message)
     message = rename_keys(map, message)
-    message = create_message(basename, message)
+    message = create_message(basename, partition, message, chain)
 
     message.to_json
   end
