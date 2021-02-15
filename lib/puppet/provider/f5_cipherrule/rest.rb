@@ -21,7 +21,7 @@ Puppet::Type.type(:f5_cipherrule).provide(:rest, parent: Puppet::Provider::F5) d
         ensure:                :present,
         cipher:                cipherrule['cipher'],
         description:           cipherrule['description'],
-        partition:              cipherrule['tmPartition'] || 'Common',
+        partition:             cipherrule['tmPartition'] || 'Common',
         dh_groups:             cipherrule['dhGroups'],
         signature_algorithms:  cipherrule['signatureAlgorithms'],
       )
@@ -30,9 +30,9 @@ Puppet::Type.type(:f5_cipherrule).provide(:rest, parent: Puppet::Provider::F5) d
   end
 
   def self.prefetch(resources)
-    nodes = instances
+    ciphers = instances
     resources.keys.each do |name|
-      if provider = nodes.find { |node| node.name == name }
+      if provider = ciphers.find { |ciphers ciphers.name == name }
         resources[name].provider = provider
       end
     end
@@ -68,6 +68,7 @@ Puppet::Type.type(:f5_cipherrule).provide(:rest, parent: Puppet::Provider::F5) d
     message = convert_underscores(message)
     message = rename_keys(map, message)
     message = create_message(basename, partition, message, chain)
+    message = string_to_integer(message)
 
     message.to_json
   end
