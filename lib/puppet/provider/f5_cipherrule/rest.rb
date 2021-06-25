@@ -32,13 +32,13 @@ Puppet::Type.type(:f5_cipherrule).provide(:rest, parent: Puppet::Provider::F5) d
   def self.prefetch(resources)
     ciphers = instances
     resources.keys.each do |name|
-      if provider = ciphers.find { |ciphers ciphers.name == name }
+      if provider = ciphers.find { |ciphers| ciphers.name == name }
         resources[name].provider = provider
       end
     end
   end
 
-  def create_message(basename, partition, hash, chain)
+  def create_message(basename, partition, hash )
     # Create the message by stripping :present.
     new_hash             = hash.reject { |k, _| [:ensure, :provider, Puppet::Type.metaparams].flatten.include?(k) }
     new_hash[:name]      = basename
